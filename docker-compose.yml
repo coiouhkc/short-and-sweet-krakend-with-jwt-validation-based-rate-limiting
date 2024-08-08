@@ -1,0 +1,45 @@
+version: '3.4'
+
+volumes:
+  keycloak-db:
+
+services:
+  krakend:
+    # The :watch image restarts the service automatically when the configuration files change.
+    # Do not use this image in production, it's meant to speed up your testing and development.
+    image: devopsfaith/krakend:watch
+    # image: devopsfaith/krakend:latest
+    container_name: krakend
+    command: run -d -c /etc/krakend/krakend.json
+    ports:
+      - "8402:8080"
+    volumes:
+      - ./config/krakend:/etc/krakend
+
+  krakend-designer:
+    image: devopsfaith/krakendesigner:latest
+    container_name: krakend-designer
+    ports:
+      - "8401:80"
+
+  keycloak-db:
+    image: docker.io/bitnami/postgresql:latest
+    volumes:
+      - keycloak-db:/var/lib/postgresql/data
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - POSTGRESQL_USERNAME=bn_keycloak
+      - POSTGRESQL_DATABASE=bitnami_keycloak
+
+  keycloak:
+    image: bitnami/keycloak:25.0.2
+    ports:
+      - "8403:8080"
+    environment:
+      - KEYCLOAK_CREATE_ADMIN_USER=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_DATABASE_HOST=keycloak-db
+      - KEYCLOAK_EXTRA_ARGS=--import-realm
+    volumes:
+      - ./config/keycloak/realm:/opt/bitnami/keycloak/data/import

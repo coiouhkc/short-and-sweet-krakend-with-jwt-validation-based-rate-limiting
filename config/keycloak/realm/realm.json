@@ -1,0 +1,99 @@
+{
+  "enabled": true,
+  "realm": "demo",
+  "accessTokenLifespan": 1800,
+  "ssoSessionIdleTimeout": 3600,
+  "clients": [
+    {
+      "clientId": "krakend",
+      "name": "krakend",
+      "description": "krakend",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "krakend-secret",
+      "serviceAccountsEnabled": "true",
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    },
+    {
+      "clientId": "mockbin-app",
+      "name": "mockbin-app",
+      "description": "mockbin-app",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "mockbin-app-secret",
+      "serviceAccountsEnabled": "true",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "publicClient": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "mockbin-app-role",
+        "description": "",
+        "composite": false,
+        "clientRole": false
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "mockbin-app-group",
+      "path": "/mockbin-app-group",
+      "realmRoles": ["mockbin-app-role"]
+    }
+  ],
+  "users": [
+    {
+      "username": "mockbin-app-user1",
+      "firstName": "App",
+      "lastName": "User",
+      "email": "mockbin-app-user1@mockbin.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "secret"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      },
+      "notBefore": 0,
+      "groups": ["mockbin-app-group"]
+    },
+    {
+      "username": "mockbin-app-user2",
+      "firstName": "App",
+      "lastName": "User",
+      "email": "mockbin-app-user2@mockbin.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "secret"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": ["offline_access", "uma_authorization"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      },
+      "notBefore": 0,
+      "groups": []
+    }
+  ]
+}

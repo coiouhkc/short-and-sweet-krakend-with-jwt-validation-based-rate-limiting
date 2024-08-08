@@ -1,0 +1,53 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true,
+      "format": "default"
+    }
+  },
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "endpoints": [
+    {
+      "endpoint": "/mockbin",
+      "method": "GET",
+      "output_encoding": "negotiate",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "extra_config": {
+            "qos/ratelimit/proxy": {
+              "max_rate": 1,
+              "capacity": 1
+            }
+          },
+          "host": ["https://397697e77d6542a4ae3ddfe9601ec554.api.mockbin.io/"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/demo/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key": "realm_access.roles",
+          "roles_key_is_nested": true,
+          "roles": [
+                "mockbin-app-role"
+            ]
+        }
+      },
+      "input_headers": ["Authorization"]
+    }
+  ]
+}
