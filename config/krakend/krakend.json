@@ -25,17 +25,21 @@
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "extra_config": {
-            "qos/ratelimit/proxy": {
-              "max_rate": 1,
-              "capacity": 1
-            }
-          },
-          "host": ["https://397697e77d6542a4ae3ddfe9601ec554.api.mockbin.io/"],
+          "host": [
+            "https://397697e77d6542a4ae3ddfe9601ec554.api.mockbin.io/"
+          ],
           "disable_host_sanitize": false
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "@comment": "1 requests every 1 second per user",
+          "client_capacity": 1,
+          "client_max_rate": 1,
+          "strategy": "header",
+          "key": "x-user",
+          "every": "1s"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/demo/protocol/openid-connect/certs",
@@ -43,11 +47,19 @@
           "roles_key": "realm_access.roles",
           "roles_key_is_nested": true,
           "roles": [
-                "mockbin-app-role"
+            "mockbin-app-role"
+          ],
+          "propagate_claims": [
+            [
+              "preferred_username",
+              "x-user"
             ]
+          ]
         }
       },
-      "input_headers": ["Authorization"]
+      "input_headers": [
+        "Authorization"
+      ]
     }
   ]
 }
