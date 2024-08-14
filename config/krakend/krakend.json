@@ -9,6 +9,20 @@
       "syslog": false,
       "stdout": true,
       "format": "default"
+    },
+    "telemetry/opentelemetry": {
+      "service_name": "krakend_prometheus_service",
+      "metric_reporting_period": 1,
+      "exporters": {
+        "prometheus": [
+          {
+            "name": "prometheus",
+            "port": 9090,
+            "process_metrics": true,
+            "go_metrics": true
+          }
+        ]
+      }
     }
   },
   "timeout": "3000ms",
@@ -25,9 +39,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "host": [
-            "https://397697e77d6542a4ae3ddfe9601ec554.api.mockbin.io/"
-          ],
+          "host": ["https://397697e77d6542a4ae3ddfe9601ec554.api.mockbin.io/"],
           "disable_host_sanitize": false
         }
       ],
@@ -46,20 +58,11 @@
           "disable_jwk_security": true,
           "roles_key": "realm_access.roles",
           "roles_key_is_nested": true,
-          "roles": [
-            "mockbin-app-role"
-          ],
-          "propagate_claims": [
-            [
-              "preferred_username",
-              "x-user"
-            ]
-          ]
+          "roles": ["mockbin-app-role"],
+          "propagate_claims": [["preferred_username", "x-user"]]
         }
       },
-      "input_headers": [
-        "Authorization"
-      ]
+      "input_headers": ["Authorization"]
     }
   ]
 }

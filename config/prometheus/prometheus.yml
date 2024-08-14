@@ -1,0 +1,16 @@
+global:
+  scrape_interval:     15s
+
+rule_files:
+  # - "first.rules"
+  # - "second.rules"
+
+scrape_configs:
+  - job_name: krakend_otel
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+        - 'krakend:9090'
+        labels:
+          app: krakend

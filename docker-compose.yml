@@ -22,6 +22,26 @@ services:
     ports:
       - "8401:80"
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: krakend
+      GF_SECURITY_ADMIN_PASSWORD: krakend
+      GF_AUT_ANONYMOUS_ENABLED: "true"
+    volumes:
+      - "./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources"
+      - "./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
+      - "./config/grafana/data/dashboards:/var/lib/grafana/dashboards"
+
   keycloak-db:
     image: docker.io/bitnami/postgresql:latest
     volumes:
